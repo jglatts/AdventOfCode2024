@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 
@@ -35,9 +35,9 @@ public class AOCDay1
 				Console.WriteLine("error (left)" + points[0]);
 			if (Int32.TryParse(points[3], out int x2))
 				right_list.Add(x2);
-            else
-                Console.WriteLine("error (right)" + points[3]);
-        }
+            		else
+                		Console.WriteLine("error (right)" + points[3]);
+        	}
 		Console.WriteLine("Left List Count " + left_list.Count);
 		Console.WriteLine("Right List Count " + right_list.Count);
 		left_list.Sort();
