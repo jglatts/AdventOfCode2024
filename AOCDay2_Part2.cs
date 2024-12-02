@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 
@@ -84,37 +84,12 @@ public class AOCDay2_Part2
             if (line.Length == 0)
                 continue;
 
+            List<int> new_vals = new List<int>();
             string[] values = line.Split(' ');
-            bool is_valid = true;
-            bool is_increasing = checkIncreasing(line);
-            for (int i = 0; i < (values.Length - 1); i++)
-            {
-                if (Int32.TryParse(values[i], out int x1) &&
-                    Int32.TryParse(values[i + 1], out int x2))
-                {
-                    int val = Math.Abs(x2 - x1);
-                    if (val > 3 || val == 0)
-                    {
-                        is_valid = false;
-                        break;
-                    }
-                    else if (is_increasing && x1 > x2)
-                    {
-                        is_valid = false;
-                        break;
-                    }
-                    else if (!is_increasing && x2 > x1)
-                    {
-                        is_valid = false;
-                        break;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("error parsing vals");
-                }
-            }
-            if (is_valid)
+            foreach (string s in values)
+                new_vals.Add(Int32.Parse(s));
+
+            if (isValidSeqeunce(new_vals))
             {
                 count++;
             }
