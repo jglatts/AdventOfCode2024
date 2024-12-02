@@ -19,33 +19,6 @@ public class AOCDay2_Part2
         }
     }
 
-    private bool checkIncreasing(string line)
-    {
-        string[] values = line.Split(' ');
-        bool ret = false;
-        int i = 0;
-
-        while (true)
-        {
-            if (Int32.TryParse(values[i], out int x1) &&
-                Int32.TryParse(values[i + 1], out int x2))
-            {
-                if (x1 == x2)
-                    i++;
-                else if (x2 > x1)
-                {
-                    ret = true;
-                    break;
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-        return ret;
-    }
-
     public bool isValidSeqeunce(List<int> values)
     {
         bool is_valid = true;
