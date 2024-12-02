@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 
-public class AOCDay1_Part2
+public class AOCDay2
 {
     private string inputString;
 
-    public AOCDay1_Part2()
+    public AOCDay2()
     {
         loadInputString();
     }
@@ -103,7 +103,7 @@ public class AOCDay1_Part2
 
     public static void Main(string[] args)
     {
-        AOCDay1_Part2 a = new AOCDay1_Part2();
+        AOCDay2 a = new AOCDay2();
         a.solve();
     }
 }
