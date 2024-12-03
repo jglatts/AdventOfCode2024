@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 public class AOCDay2_Part2
 {
@@ -14,9 +15,7 @@ public class AOCDay2_Part2
     private void loadInputString()
     {
         foreach (string line in File.ReadAllLines("C:\\Users\\jglatts\\Documents\\AOC24\\input_day2.txt"))
-        {
             inputString += line + "\n";
-        }
     }
 
     public bool isValidSeqeunce(List<int> values)
@@ -52,15 +51,14 @@ public class AOCDay2_Part2
     public void solve()
     {
         int count = 0;
+        
         foreach (string line in inputString.Split('\n'))
         {
             if (line.Length == 0)
                 continue;
 
-            List<int> new_vals = new List<int>();
             string[] values = line.Split(' ');
-            foreach (string s in values)
-                new_vals.Add(Int32.Parse(s));
+            List<int> new_vals  = values.Select(x => Int32.Parse(x)).ToList();
 
             if (isValidSeqeunce(new_vals))
             {
@@ -68,28 +66,29 @@ public class AOCDay2_Part2
             }
             else
             {
-                (bool check, int val) ret = validAfterRemoval(line, values);  
+                (bool check, int val) ret = validAfterRemoval(new_vals);  
                 if (ret.check)
                 {
                     count++;
                 }
             }
         }
+        
         Console.WriteLine(count);
     }
 
-    public (bool check, int val) validAfterRemoval(string line, string[] values)
+    public (bool check, int val) validAfterRemoval(List<int> values)
     {
         bool ret = false;
         int i;
 
-        for (i = 0; i < values.Length; i++)
+        for (i = 0; i < values.Count; i++)
         {
-            List<int>new_values = new List<int>();
+            List<int> new_values = new List<int>();
             for (int j = 0; j < i; j++)
-                new_values.Add(Int32.Parse(values[j]));
-            for (int k = i + 1; k < values.Length; k++)
-                new_values.Add(Int32.Parse(values[k]));
+                new_values.Add(values[j]);
+            for (int k = i + 1; k < values.Count; k++)
+                new_values.Add(values[k]);
             
             if (isValidSeqeunce(new_values))
             {
@@ -100,7 +99,7 @@ public class AOCDay2_Part2
 
         return (ret, i);
     }
-
+    
     public void print()
     {
         Console.WriteLine(inputString.Split('\n').Length);
