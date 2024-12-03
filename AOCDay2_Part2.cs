@@ -9,16 +9,16 @@ public class AOCDay2_Part2
 
     public AOCDay2_Part2()
     {
-        loadInputString();
+        LoadInputString();
     }
 
-    private void loadInputString()
+    private void LoadInputString()
     {
         foreach (string line in File.ReadAllLines("C:\\Users\\jglatts\\Documents\\AOC24\\input_day2.txt"))
             inputString += line + "\n";
     }
 
-    public bool isValidSeqeunce(List<int> values)
+    public bool IsValidSeqeunce(List<int> values)
     {
         bool is_valid = true;
         bool is_increasing = values[0] < values[1];
@@ -48,36 +48,32 @@ public class AOCDay2_Part2
         return is_valid;
     }
 
-    public void solve()
+    public void Solve()
     {
         int count = 0;
-        
         foreach (string line in inputString.Split('\n'))
         {
             if (line.Length == 0)
                 continue;
 
-            string[] values = line.Split(' ');
-            List<int> new_vals  = values.Select(x => Int32.Parse(x)).ToList();
-
-            if (isValidSeqeunce(new_vals))
+            List<int> new_vals  = line.Split(' ').Select(x => Int32.Parse(x)).ToList();
+            if (IsValidSeqeunce(new_vals))
             {
                 count++;
             }
             else
             {
-                (bool check, int val) ret = validAfterRemoval(new_vals);  
+                (bool check, int val) ret = ValidAfterRemoval(new_vals);  
                 if (ret.check)
                 {
                     count++;
                 }
             }
         }
-        
         Console.WriteLine(count);
     }
 
-    public (bool check, int val) validAfterRemoval(List<int> values)
+    public (bool check, int val) ValidAfterRemoval(List<int> values)
     {
         bool ret = false;
         int i;
@@ -85,12 +81,12 @@ public class AOCDay2_Part2
         for (i = 0; i < values.Count; i++)
         {
             List<int> new_values = new List<int>();
-            for (int j = 0; j < i; j++)
+            for (int j = 0; j < i; j++) 
                 new_values.Add(values[j]);
             for (int k = i + 1; k < values.Count; k++)
                 new_values.Add(values[k]);
             
-            if (isValidSeqeunce(new_values))
+            if (IsValidSeqeunce(new_values))
             {
                 ret = true;
                 break;
@@ -100,7 +96,7 @@ public class AOCDay2_Part2
         return (ret, i);
     }
     
-    public void print()
+    public void Print()
     {
         Console.WriteLine(inputString.Split('\n').Length);
     }
@@ -108,6 +104,6 @@ public class AOCDay2_Part2
     public static void Main(string[] args)
     {
         AOCDay2_Part2 a = new AOCDay2_Part2();
-        a.solve();
+        a.Solve();
     }
 }
