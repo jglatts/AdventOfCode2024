@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +7,15 @@ public class AOCDay3
 {
     private string inputString;
     private string searchSeq;
+    private string enableString;
+    private string disableString;
 
     public AOCDay3()
     {
-        searchSeq = "mul(";
         LoadInputString();
+        searchSeq = "mul(";
+        enableString = "do()";
+        disableString = "don't()";
     }
 
     private void LoadInputString()
@@ -23,12 +27,71 @@ public class AOCDay3
     public void Solve()
     {
         List<string> valid_strings = new List<string>();
+        bool isEnabled = true;
+        int count = 0;
+
         for (int i = 0; i < inputString.Length; i++)
         {
+            int dont_index = 0;
+            bool dont_was_found = false;
+            if (inputString[i] == disableString[dont_index])
+            {
+                dont_was_found = true;
+                int copy = i + 1;
+                for (int k = dont_index+1; k < disableString.Length; k++) 
+                {
+                    if (inputString[copy] != disableString[k])
+                    {
+                        dont_was_found = false;
+                        break;
+                    }
+                    else
+                    {
+                        copy++;
+                        count++;
+                    }
+                }
+            }
+
+            if (dont_was_found)
+            {
+                Console.WriteLine("found a dont");
+                isEnabled = false;
+            }
+
+            int do_index = 0;
+            bool do_was_found = false;
+            count = 0;
+            if (inputString[i] == enableString[do_index])
+            {
+                do_was_found = true;
+                int copy = i + 1;
+                for (int k = do_index + 1; k < enableString.Length; k++)
+                {
+                    if (inputString[copy] != enableString[k])
+                    {
+                        do_was_found = false;
+                        break;
+                    }
+                    else 
+                    {
+                        copy++;
+                        count++;
+                    }
+                }
+
+            }
+
+            if (do_was_found)
+            {
+                Console.WriteLine("found a do");
+                isEnabled = true;
+            }
+
             int search_idx = 0;
             if (inputString[i] == searchSeq[search_idx])
             {
-                int count = 0;
+                count = 0;
                 bool is_valid = true;
                 i++;
                 for (int j = search_idx + 1; j < searchSeq.Length; j++)
@@ -44,7 +107,7 @@ public class AOCDay3
                         count++;
                     }
                 }
-                if (is_valid)
+                if (is_valid && isEnabled)
                 {
                     string theStr = inputString.Substring((i - count) - 1, 12);
                     if (theStr.IndexOf(',') != -1 && theStr.IndexOf(')') != -1)
@@ -74,7 +137,7 @@ public class AOCDay3
                 int x2 = Int32.Parse(val_two);
                 sum += x1 * x2;
             }
-            catch (Exception ex){
+            catch (Exception ex) {
                 Console.WriteLine(value_str + "\ncaused" + ex.Message);
             }
         }
