@@ -170,6 +170,11 @@ public class AOCDay4_Part2
                         }
                     }
                 }
+
+                else if (the_map[i, j] == searchStr[0])
+                {
+                    // more checking, ooo what fun!
+                }
             }
         }
         
@@ -253,11 +258,6 @@ public class AOCDay4_Part2
                         }
                         total += 1;
                     }
-                }
-
-                else if (the_map[i, j] == searchStr[0])
-                { 
-                    // more checking, ooo what fun!
                 }
             }
         }
