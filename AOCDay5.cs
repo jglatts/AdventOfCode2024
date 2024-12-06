@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,6 +63,7 @@ public class AOCDay5
     public void Solve()
     {
         int total = 0;
+        int total_sum = 0;
         List<int> idx_list = new List<int>();
         List<List<int>> valid_updates = new List<List<int>>();
         List<int> copy_pg = new List<int>();
@@ -100,11 +101,7 @@ public class AOCDay5
             }
         }
 
-
-
         Console.WriteLine("\n" + total + " valid rows: ");
-
-        int total_sum = 0;
         foreach (var valid_list in valid_updates)
         {
             if (((valid_list.Count % 2) != 0))
@@ -117,7 +114,6 @@ public class AOCDay5
             }
             Console.WriteLine("");
         }
-
         Console.WriteLine("\n\n\nanswer: " + total_sum);
     }
 
