@@ -21,25 +21,31 @@ public class AOCDay5
     private void LoadInputString()
     {
         inputString = "";
-        foreach (string line in File.ReadAllLines("C:\\Users\\jglatts\\Documents\\AOC24\\input_day5.txt"))
+        foreach (string line in File.ReadAllLines("..\\inputs\\input_day5.txt"))
         {
-            if (line.Contains("|"))
+            try
             {
-                string[] rule_vals = line.Split('|');
-                int first_page = Int32.Parse(rule_vals[0]);
-                int second_page = Int32.Parse(rule_vals[1]);
-                if (!rules.ContainsKey(first_page))
+                if (line.Contains("|"))
                 {
-                    rules[first_page] = new List<int>();
+                    string[] rule_vals = line.Split('|');
+                    int first_page = Int32.Parse(rule_vals[0]);
+                    int second_page = Int32.Parse(rule_vals[1]);
+                    if (!rules.ContainsKey(first_page))
+                    {
+                        rules[first_page] = new List<int>();
+                    }
+                    rules[first_page].Add(second_page);
                 }
-                rules[first_page].Add(second_page);
+                if (line.Contains(","))
+                {
+                    List<int> the_pages = new List<int>();
+                    foreach (string s in line.Split(','))
+                        the_pages.Add(Int32.Parse(s));
+                    page_updates.Add(the_pages);
+                }
             }
-            if (line.Contains(",")) 
-            {
-                List<int> the_pages = new List<int>();
-                foreach (string s in line.Split(','))
-                    the_pages.Add(Int32.Parse(s));
-                page_updates.Add(the_pages);
+            catch(Exception e)  { 
+                Console.WriteLine(e.ToString());
             }
         }
 

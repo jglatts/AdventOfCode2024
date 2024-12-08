@@ -20,7 +20,7 @@ public class AOCDay3
 
     private void LoadInputString()
     {
-        foreach (string line in File.ReadAllLines("C:\\Users\\jglatts\\Documents\\AOC24\\input_day3.txt"))
+        foreach (string line in File.ReadAllLines("..\\inputs\\input_day3.txt"))
             inputString += line;
     }
 

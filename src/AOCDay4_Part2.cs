@@ -44,7 +44,7 @@ public class AOCDay4_Part2
 
     private void LoadInputString()
     {
-        foreach (string line in File.ReadAllLines("C:\\Users\\jglatts\\Documents\\AOC24\\input_day4.txt"))
+        foreach (string line in File.ReadAllLines("..\\inputs\\input_day4.txt"))
         {
             if (line.Length > 0 && !string.IsNullOrEmpty(line))
             {

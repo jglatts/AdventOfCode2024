@@ -13,7 +13,7 @@ public class AOCDay1
 
 	private void loadInputString()
 	{
-        string[] lines = File.ReadAllLines("C:\\Users\\jglatts\\source\\repos\\ZA-Elastomeric-Quoter\\input.txt");
+        string[] lines = File.ReadAllLines("..\\inputs\\input_day1.txt");
         foreach (string line in lines)
         {
 			inputString += line + "\n";
