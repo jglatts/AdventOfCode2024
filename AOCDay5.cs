@@ -1,14 +1,3 @@
-/*
- * 
- *      need to change the dwatastructures
- *      
- *      broken_rules need to be alist of lists to get each line
- *      getting ovrelapping with one list
- *      will be easier to use with a list of lists 
- * 
- * 
- */
-
 using System;
 using System.IO;
 using System.Collections.Generic;
