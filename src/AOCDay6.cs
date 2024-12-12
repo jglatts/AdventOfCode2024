@@ -53,11 +53,9 @@ public class AOCDay6
                     {
                         obs_positions.Add((i, j));
                     }
-                    Console.Write(line[j] + " ");
                     temp_list.Add(line[j]);
                 }
                 the_map.Add(temp_list);
-                Console.WriteLine();
             }
             catch (Exception e)
             {
@@ -82,14 +80,9 @@ public class AOCDay6
             return;
         }
 
-        drawMap(curr_guard_pos);
+        //drawMap(curr_guard_pos);
         marked_positions.Add((curr_guard_pos.row, curr_guard_pos.col));
-        /*
-         *      loop will be complete (guard will exit)
-         *      when direction == DOWN and at btm row??
-         *              or
-         *      cant move right, i.e, obstructoin to right??
-         */
+        
         while (!is_done)
         {
             while (!obs_check)
@@ -97,7 +90,7 @@ public class AOCDay6
                 if (row_above >= the_map.Count)
                 {
                     Console.WriteLine("err with row_above" + row_above);
-                    drawMap((row_above-1, curr_guard_pos.col));
+                    drawMap((row_above - 1, curr_guard_pos.col));
                     is_done = true;
                     break;
                 }
@@ -112,13 +105,21 @@ public class AOCDay6
                 {
                     if (guard_direction == GuardDirection.UP)
                     {
-                        drawMap((row_above, curr_guard_pos.col));
+                        //drawMap((row_above, curr_guard_pos.col));
                         if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
                             marked_positions.Add((row_above, curr_guard_pos.col));
+
+                        if (row_above == 0)
+                        { 
+                            curr_guard_pos.col++;
+                            guard_direction = GuardDirection.RIGHT; 
+                            break;
+                        }
+                        
                         row_above--;
                         if (row_above < 1)
                         {
-                            Console.WriteLine("guard is at row " + row_above);
+                            Console.WriteLine("ERR guard is at row " + row_above);
                             guard_position.row = row_above + 1;
                             break;
                         }
@@ -133,7 +134,7 @@ public class AOCDay6
                         }
                         if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
                             marked_positions.Add((row_above, curr_guard_pos.col));
-                        drawMap((row_above, curr_guard_pos.col));
+                        //drawMap((row_above, curr_guard_pos.col));
                         row_above++;
                     }
                     else if (guard_direction == GuardDirection.LEFT)
@@ -145,11 +146,11 @@ public class AOCDay6
                         }
                         if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
                             marked_positions.Add((row_above, curr_guard_pos.col));
-                        drawMap((row_above, curr_guard_pos.col));
+                        //drawMap((row_above, curr_guard_pos.col));
                         curr_guard_pos.col -= 1;
                     }
                     else if (guard_direction == GuardDirection.RIGHT)
-                    { 
+                    {
                         if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
                             marked_positions.Add((row_above, curr_guard_pos.col));
                         if (curr_guard_pos.col >= the_map[0].Count)
@@ -157,19 +158,19 @@ public class AOCDay6
                             Console.WriteLine("error curr_guard");
                             curr_guard_pos.col--;
                             obs_check = true;
-                            is_done= true;
+                            is_done = true;
                         }
-                        drawMap((row_above, curr_guard_pos.col));
+                        //drawMap((row_above, curr_guard_pos.col));
                         curr_guard_pos.col += 1;
                     }
                 }
                 else
                 {
                     // found an obstruction, check which direction to change to 
-                    Console.WriteLine("found an obstruction and guard is at " + guard_direction);
+                    //Console.WriteLine("found an obstruction and guard is at " + guard_direction);
                     if (is_in_final_check)
                     {
-                        is_done= true;
+                        is_done = true;
                         break;
                     }
                     if (guard_direction == GuardDirection.DOWN && row_above == (the_map.Count))
@@ -197,7 +198,8 @@ public class AOCDay6
                         curr_guard_pos.col--;
                         row_above--;
                     }
-                    else {
+                    else
+                    {
                         guard_direction = GuardDirection.UP;
                         row_above--;
                         curr_guard_pos.col++;
