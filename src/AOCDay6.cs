@@ -213,6 +213,10 @@ public class AOCDay6
             the_map[curr_guard_pos.row][curr_guard_pos.col] = '^';
         else if (guard_direction == GuardDirection.RIGHT)
             the_map[curr_guard_pos.row][curr_guard_pos.col] = '>';
+        else if (guard_direction == GuardDirection.LEFT)
+            the_map[curr_guard_pos.row][curr_guard_pos.col] = '<';
+        else if (guard_direction == GuardDirection.DOWN)
+            the_map[curr_guard_pos.row][curr_guard_pos.col] = 'v';
 
         for (int i = 0; i < the_map.Count; i++)
         {
