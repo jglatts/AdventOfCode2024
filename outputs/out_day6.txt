@@ -267,3 +267,28 @@ guard pos 6, 2
 . . . . . . # . . . 
 
 found an obstruction and guard is at LEFT
+guard pos 5, 2
+. . . . # . . . . . 
+. . . . X X X X X # 
+. . . . X . . . X . 
+. . # . X . . . X . 
+. . . . X . . # X . 
+. . ^ . X . . . X . 
+. # X X X X X X X . 
+. . . . . . . . # . 
+# . . . . . . . . . 
+. . . . . . # . . . 
+
+guard pos 4, 2
+. . . . # . . . . . 
+. . . . X X X X X # 
+. . . . X . . . X . 
+. . # . X . . . X . 
+. . ^ . X . . # X . 
+. . X . X . . . X . 
+. # X X X X X X X . 
+. . . . . . . . # . 
+# . . . . . . . . . 
+. . . . . . # . . . 
+
+found an obstruction and guard is at UP
