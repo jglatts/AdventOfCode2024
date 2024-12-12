@@ -36,7 +36,7 @@ public class AOCDay6
     private void LoadInputString()
     {
         inputString = "";
-        string[] all_lines = File.ReadAllLines("..\\inputs\\test_input6.txt");
+        string[] all_lines = File.ReadAllLines("..\\inputs\\input_day6.txt");
         for (int i = 0; i < all_lines.Length; i++)
         {
             try
@@ -70,9 +70,6 @@ public class AOCDay6
 
     public void Solve()
     {
-        /*/
-            will need to employ a graph searh (DFS|BFS) 
-         */
         (int row, int col) curr_guard_pos = guard_position;
         bool obs_check = false;
         bool is_done = false;
@@ -116,7 +113,8 @@ public class AOCDay6
                     if (guard_direction == GuardDirection.UP)
                     {
                         drawMap((row_above, curr_guard_pos.col));
-                        marked_positions.Add((row_above, curr_guard_pos.col));
+                        if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
+                            marked_positions.Add((row_above, curr_guard_pos.col));
                         row_above--;
                         if (row_above < 1)
                         {
@@ -133,7 +131,8 @@ public class AOCDay6
                             guard_position.row = row_above - 1;
                             break;
                         }
-                        marked_positions.Add((row_above, curr_guard_pos.col));
+                        if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
+                            marked_positions.Add((row_above, curr_guard_pos.col));
                         drawMap((row_above, curr_guard_pos.col));
                         row_above++;
                     }
@@ -144,13 +143,15 @@ public class AOCDay6
                             Console.WriteLine("error curr_guard == 0 and directoin == lefts");
                             return;
                         }
-                        marked_positions.Add((row_above, curr_guard_pos.col));
+                        if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
+                            marked_positions.Add((row_above, curr_guard_pos.col));
                         drawMap((row_above, curr_guard_pos.col));
                         curr_guard_pos.col -= 1;
                     }
                     else if (guard_direction == GuardDirection.RIGHT)
-                    {
-                        marked_positions.Add((row_above, curr_guard_pos.col));
+                    { 
+                        if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
+                            marked_positions.Add((row_above, curr_guard_pos.col));
                         if (curr_guard_pos.col >= the_map[0].Count)
                         {
                             Console.WriteLine("error curr_guard");
@@ -171,7 +172,7 @@ public class AOCDay6
                         is_done= true;
                         break;
                     }
-                    if (guard_direction == GuardDirection.DOWN && row_above == (the_map.Count-1))
+                    if (guard_direction == GuardDirection.DOWN && row_above == (the_map.Count))
                     {
                         // this is the break condition, we are in DOWN state and last row
                         Console.WriteLine("in final step!");
@@ -197,8 +198,6 @@ public class AOCDay6
                         row_above--;
                     }
                     else {
-                        // guard is LEFT
-                        // will need to set another flag here but further processing
                         guard_direction = GuardDirection.UP;
                         row_above--;
                         curr_guard_pos.col++;
@@ -206,6 +205,8 @@ public class AOCDay6
                 }
             }
         }
+
+        Console.WriteLine("guard visited " + marked_positions.Count + " distinct spots");
     }
 
     public void drawMap((int row, int col) curr_guard_pos)
