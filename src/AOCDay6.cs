@@ -10,6 +10,12 @@ public enum GuardDirection
     RIGHT,
 };
 
+public class Vertex
+{
+    public int row;
+    public int col;
+}
+
 public class AOCDay6
 {
 
@@ -19,6 +25,7 @@ public class AOCDay6
     private readonly char guard;
     private List<(int row, int col)> obs_positions;
     private List<(int row, int col)> marked_positions;
+    private Dictionary<Vertex, int> seen_amount;
     private (int row, int col) guard_position;
     private GuardDirection guard_direction;
 
@@ -27,16 +34,19 @@ public class AOCDay6
         the_map = new List<List<char>>();
         obs_positions = new List<(int row, int col)>();
         marked_positions = new List<(int row, int col)>();
+        seen_amount = new Dictionary<Vertex, int>();
         obstruction = '#';
         guard = '^';
         guard_direction = GuardDirection.UP;
         LoadInputString();
     }
 
-    private void LoadInputString()
+    private void loadMap()
     {
-        inputString = "";
-        string[] all_lines = File.ReadAllLines("..\\inputs\\input_day6.txt");
+        string real_in = "..\\inputs\\input_day6.txt";
+        string test_in = "..\\inputs\\test_input6.txt";
+        //string[] all_lines = File.ReadAllLines(test_in);
+        string[] all_lines = File.ReadAllLines(real_in);
         for (int i = 0; i < all_lines.Length; i++)
         {
             try
@@ -62,6 +72,12 @@ public class AOCDay6
                 Console.WriteLine(e.ToString());
             }
         }
+    }
+
+    private void LoadInputString()
+    {
+        inputString = "";
+        loadMap();
         Console.WriteLine("rows " + the_map.Count + ", cols " + the_map[0].Count);
         Console.WriteLine("guard pos " + guard_position.row + ", " + guard_position.col);
     }
@@ -83,6 +99,7 @@ public class AOCDay6
         //drawMap(curr_guard_pos);
         marked_positions.Add((curr_guard_pos.row, curr_guard_pos.col));
         
+        // working, but need a 'loop' detection
         while (!is_done)
         {
             while (!obs_check)
@@ -90,7 +107,7 @@ public class AOCDay6
                 if (row_above >= the_map.Count)
                 {
                     Console.WriteLine("err with row_above" + row_above);
-                    drawMap((row_above - 1, curr_guard_pos.col));
+                    //drawMap((row_above - 1, curr_guard_pos.col));
                     is_done = true;
                     break;
                 }
@@ -109,20 +126,15 @@ public class AOCDay6
                         if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
                             marked_positions.Add((row_above, curr_guard_pos.col));
 
+                        addToMap(row_above, curr_guard_pos.col);
                         if (row_above == 0)
                         { 
                             curr_guard_pos.col++;
+                            //row_above++;
                             guard_direction = GuardDirection.RIGHT; 
                             break;
                         }
-                        
                         row_above--;
-                        if (row_above < 1)
-                        {
-                            Console.WriteLine("ERR guard is at row " + row_above);
-                            guard_position.row = row_above + 1;
-                            break;
-                        }
                     }
                     else if (guard_direction == GuardDirection.DOWN)
                     {
@@ -134,6 +146,8 @@ public class AOCDay6
                         }
                         if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
                             marked_positions.Add((row_above, curr_guard_pos.col));
+                        
+                        addToMap(row_above, curr_guard_pos.col);
                         //drawMap((row_above, curr_guard_pos.col));
                         row_above++;
                     }
@@ -146,6 +160,8 @@ public class AOCDay6
                         }
                         if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
                             marked_positions.Add((row_above, curr_guard_pos.col));
+                        
+                        addToMap(row_above, curr_guard_pos.col);
                         //drawMap((row_above, curr_guard_pos.col));
                         curr_guard_pos.col -= 1;
                     }
@@ -153,6 +169,8 @@ public class AOCDay6
                     {
                         if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
                             marked_positions.Add((row_above, curr_guard_pos.col));
+                        
+                        addToMap(row_above, curr_guard_pos.col);
                         if (curr_guard_pos.col >= the_map[0].Count)
                         {
                             Console.WriteLine("error curr_guard");
@@ -168,6 +186,7 @@ public class AOCDay6
                 {
                     // found an obstruction, check which direction to change to 
                     //Console.WriteLine("found an obstruction and guard is at " + guard_direction);
+                    //drawMap((row_above, curr_guard_pos.col));
                     if (is_in_final_check)
                     {
                         is_done = true;
@@ -208,7 +227,58 @@ public class AOCDay6
             }
         }
 
-        Console.WriteLine("guard visited " + marked_positions.Count + " distinct spots");
+        string final_str = "guard visited " + marked_positions.Count + " distinct spots" + " " + row_above + " " + curr_guard_pos.col + "\nvisited\n";
+        Console.WriteLine(final_str);
+        if (row_above == the_map.Count)
+            row_above--;
+        else if (row_above < 0)
+            row_above = 0;
+        if (curr_guard_pos.col == the_map[0].Count)
+            curr_guard_pos.col--;
+        else if (curr_guard_pos.col < 0)
+            curr_guard_pos.col = 0;
+        drawMap((row_above, curr_guard_pos.col));
+    }
+
+    public void addToMap(int row_above, int col)
+    {
+        Vertex v = new Vertex() { row = row_above, col = col };
+        if (mapContainsVertex(v))
+        {
+            Vertex key = getMapKey(v);
+            if (seen_amount[key] > 3)
+            {
+                Console.WriteLine("loop detected! (" + row_above + ", " + col + " has been seen " + seen_amount[key] + " times");
+            }
+            seen_amount[getMapKey(v)] += 1;
+        }
+        else
+        {
+            seen_amount.Add(v, 1);
+        }
+    }
+
+    public Vertex getMapKey(Vertex v)
+    {
+        foreach (var item in seen_amount)
+        {
+            Vertex check = item.Key;
+            if (check.row == v.row && check.col == v.col)
+                return check;
+        }
+        return null;
+    }
+
+    public bool mapContainsVertex(Vertex v)
+    {
+        foreach (var item in seen_amount)
+        {
+            Vertex check = item.Key;
+            if (check.row == v.row && check.col == v.col)
+                return true;
+        }
+
+        return false;
     }
 
     public void drawMap((int row, int col) curr_guard_pos)
@@ -242,12 +312,21 @@ public class AOCDay6
 
         for (int i = 0; i < the_map.Count; i++)
         {
+            string s = "row (" + i + ")";
+            Console.Write(s.PadRight(10, ' '));
             for (int j = 0; j < the_map[i].Count; j++)
             {
-                Console.Write(the_map[i][j] + " ");
+                Console.Write(the_map[i][j] + "");
             }
             Console.WriteLine();
         }
+
+        /*
+        foreach (var items in seen_amount)
+        { 
+            Console.WriteLine(" (" + items.Key.row + ", " + items.Key.col + ") has been seen " + items.Value + " times");
+        }
+        */
 
         Console.WriteLine();
     }
@@ -261,7 +340,10 @@ public class AOCDay6
     public static void Main(string[] args)
     {
         AOCDay6 a = new AOCDay6();
+        var watch = System.Diagnostics.Stopwatch.StartNew();
         a.Solve();
+        watch.Stop();
+        Console.WriteLine("\n\nsolved in " +  + (watch.ElapsedMilliseconds) + "ms\n" + (watch.ElapsedMilliseconds/1000) + "sec");
     }
 
 }
