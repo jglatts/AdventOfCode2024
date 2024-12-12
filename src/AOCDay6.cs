@@ -76,6 +76,7 @@ public class AOCDay6
         (int row, int col) curr_guard_pos = guard_position;
         bool obs_check = false;
         bool is_done = false;
+        bool is_in_final_check = false;
         int row_above = curr_guard_pos.row - 1;
         if (row_above < 0)
         {
@@ -86,6 +87,12 @@ public class AOCDay6
 
         drawMap(curr_guard_pos);
         marked_positions.Add((curr_guard_pos.row, curr_guard_pos.col));
+        /*
+         *      loop will be complete (guard will exit)
+         *      when direction == DOWN and at btm row??
+         *              or
+         *      cant move right, i.e, obstructoin to right??
+         */
         while (!is_done)
         {
             while (!obs_check)
@@ -159,6 +166,11 @@ public class AOCDay6
                 {
                     // found an obstruction, check which direction to change to 
                     Console.WriteLine("found an obstruction and guard is at " + guard_direction);
+                    if (is_in_final_check)
+                    {
+                        is_done= true;
+                        break;
+                    }
                     if (guard_direction == GuardDirection.UP)
                     {
                         guard_direction = GuardDirection.RIGHT;
@@ -180,9 +192,13 @@ public class AOCDay6
                         row_above--;
                     }
                     else {
+                        // guard is LEFT
                         // what next,loop back?
-                        obs_check = true;
-                        is_done = true; 
+                        // will need to set another flag here but further processing
+                        guard_direction = GuardDirection.UP;
+                        is_in_final_check = true;
+                        row_above--;
+                        curr_guard_pos.col++;
                     }
                 }
             }
