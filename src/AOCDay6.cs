@@ -79,7 +79,7 @@ public class AOCDay6
         inputString = "";
         loadMap();
         Console.WriteLine("rows " + the_map.Count + ", cols " + the_map[0].Count);
-        Console.WriteLine("guard pos " + guard_position.row + ", " + guard_position.col);
+        Console.WriteLine("guard pos " + guard_position.row + ", " + guard_position.col + "\n");
     }
 
     public void Solve()
@@ -99,7 +99,9 @@ public class AOCDay6
         //drawMap(curr_guard_pos);
         marked_positions.Add((curr_guard_pos.row, curr_guard_pos.col));
         
-        // working, but need a 'loop' detection
+        // loop detection is somewhat working
+        // the reported value (5469) is too-hi
+        // 
         while (!is_done)
         {
             while (!obs_check)
@@ -126,7 +128,12 @@ public class AOCDay6
                         if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
                             marked_positions.Add((row_above, curr_guard_pos.col));
 
-                        addToMap(row_above, curr_guard_pos.col);
+                        if (addToMap(row_above, curr_guard_pos.col))
+                        {   
+                            // loop deteced
+                            is_done= true;
+                            break;
+                        }
                         if (row_above == 0)
                         { 
                             curr_guard_pos.col++;
@@ -146,8 +153,13 @@ public class AOCDay6
                         }
                         if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
                             marked_positions.Add((row_above, curr_guard_pos.col));
-                        
-                        addToMap(row_above, curr_guard_pos.col);
+
+                        if (addToMap(row_above, curr_guard_pos.col))
+                        {
+                            // loop deteced
+                            is_done = true;
+                            break;
+                        }
                         //drawMap((row_above, curr_guard_pos.col));
                         row_above++;
                     }
@@ -160,8 +172,14 @@ public class AOCDay6
                         }
                         if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
                             marked_positions.Add((row_above, curr_guard_pos.col));
-                        
-                        addToMap(row_above, curr_guard_pos.col);
+
+                        if (addToMap(row_above, curr_guard_pos.col))
+                        {
+                            // loop deteced
+                            
+                            is_done = true;
+                            break;
+                        }
                         //drawMap((row_above, curr_guard_pos.col));
                         curr_guard_pos.col -= 1;
                     }
@@ -169,8 +187,13 @@ public class AOCDay6
                     {
                         if (!marked_positions.Contains((row_above, curr_guard_pos.col)))
                             marked_positions.Add((row_above, curr_guard_pos.col));
-                        
-                        addToMap(row_above, curr_guard_pos.col);
+
+                        if (addToMap(row_above, curr_guard_pos.col))
+                        {
+                            // loop deteced
+                            is_done = true;
+                            break;
+                        }
                         if (curr_guard_pos.col >= the_map[0].Count)
                         {
                             Console.WriteLine("error curr_guard");
@@ -227,8 +250,6 @@ public class AOCDay6
             }
         }
 
-        string final_str = "guard visited " + marked_positions.Count + " distinct spots" + " " + row_above + " " + curr_guard_pos.col + "\nvisited\n";
-        Console.WriteLine(final_str);
         if (row_above == the_map.Count)
             row_above--;
         else if (row_above < 0)
@@ -237,18 +258,25 @@ public class AOCDay6
             curr_guard_pos.col--;
         else if (curr_guard_pos.col < 0)
             curr_guard_pos.col = 0;
+
         drawMap((row_above, curr_guard_pos.col));
+        string final_str = "guard visited " + marked_positions.Count + " distinct spots" + " finished at (" + row_above + ", " + curr_guard_pos.col + ")";
+        Console.WriteLine(final_str);
     }
 
-    public void addToMap(int row_above, int col)
+    public bool addToMap(int row_above, int col)
     {
         Vertex v = new Vertex() { row = row_above, col = col };
+        Vertex key = null;
+        bool ret = false;
+        
         if (mapContainsVertex(v))
         {
-            Vertex key = getMapKey(v);
-            if (seen_amount[key] > 3)
+            key = getMapKey(v);
+            if (seen_amount[key] > 2)
             {
-                Console.WriteLine("loop detected! (" + row_above + ", " + col + " has been seen " + seen_amount[key] + " times");
+                Console.WriteLine("loop detected! (" + row_above + ", " + col + ") has been seen " + seen_amount[key] + " times");
+                ret = true;
             }
             seen_amount[getMapKey(v)] += 1;
         }
@@ -256,6 +284,11 @@ public class AOCDay6
         {
             seen_amount.Add(v, 1);
         }
+
+        if (key != null)
+            Console.WriteLine("(" + row_above + ", " + col + ") has been seen " + seen_amount[key] + " times");
+        
+        return ret;
     }
 
     public Vertex getMapKey(Vertex v)
