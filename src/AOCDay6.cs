@@ -1,30 +1,35 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
+
+public enum GuardDirection
+{
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+};
 
 public class AOCDay6
 {
+
     private string inputString;
     private List<List<char>> the_map;
     private readonly char obstruction;
     private readonly char guard;
     private List<(int row, int col)> obs_positions;
+    private List<(int row, int col)> marked_positions;
     private (int row, int col) guard_position;
-    
-    public enum GuardDirection { 
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT,
-    };
+    private GuardDirection guard_direction;
 
     public AOCDay6()
     {
         the_map = new List<List<char>>();
         obs_positions = new List<(int row, int col)>();
+        marked_positions = new List<(int row, int col)>();
         obstruction = '#';
         guard = '^';
+        guard_direction = GuardDirection.UP;
         LoadInputString();
     }
 
@@ -65,40 +70,123 @@ public class AOCDay6
 
     public void Solve()
     {
-        /*
+        /*/
             will need to employ a graph searh (DFS|BFS) 
          */
         (int row, int col) curr_guard_pos = guard_position;
         bool obs_check = false;
+        bool is_done = false;
         int row_above = curr_guard_pos.row - 1;
         if (row_above < 0)
         {
             // will need to do more here
-            Console.Write("guard is at row 0");
+            Console.Write("guard is at row 0 - errr");
             return;
         }
 
         drawMap(curr_guard_pos);
-        while (!obs_check)
+        marked_positions.Add((curr_guard_pos.row, curr_guard_pos.col));
+        while (!is_done)
         {
-            char check = the_map[row_above][curr_guard_pos.col];
-            if (check != obstruction)
+            while (!obs_check)
             {
-                row_above--;
-                if (row_above < 1)
+                if (row_above >= the_map.Count)
                 {
-                    Console.Write("guard is at row " + row_above);
-                    guard_position.row = row_above + 1;
+                    Console.WriteLine("err with row_above" + row_above);
+                    drawMap((row_above-1, curr_guard_pos.col));
+                    is_done = true;
                     break;
                 }
-                drawMap((row_above, curr_guard_pos.col));
-            }
-            else
-            { 
-                obs_check = true;
+                if (curr_guard_pos.col >= the_map[0].Count || curr_guard_pos.col < 0)
+                {
+                    Console.WriteLine("err with col_pos" + row_above);
+                    is_done = true;
+                    break;
+                }
+                char check = the_map[row_above][curr_guard_pos.col];
+                if (check != obstruction)
+                {
+                    if (guard_direction == GuardDirection.UP)
+                    {
+                        drawMap((row_above, curr_guard_pos.col));
+                        marked_positions.Add((row_above, curr_guard_pos.col));
+                        row_above--;
+                        if (row_above < 1)
+                        {
+                            Console.WriteLine("guard is at row " + row_above);
+                            guard_position.row = row_above + 1;
+                            break;
+                        }
+                    }
+                    else if (guard_direction == GuardDirection.DOWN)
+                    {
+                        if (row_above >= the_map.Count)
+                        {
+                            Console.WriteLine("guard is at row " + row_above);
+                            guard_position.row = row_above - 1;
+                            break;
+                        }
+                        marked_positions.Add((row_above, curr_guard_pos.col));
+                        drawMap((row_above, curr_guard_pos.col));
+                        row_above++;
+                    }
+                    else if (guard_direction == GuardDirection.LEFT)
+                    {
+                        if (curr_guard_pos.col < 0)
+                        {
+                            Console.WriteLine("error curr_guard == 0 and directoin == lefts");
+                            return;
+                        }
+                        marked_positions.Add((row_above, curr_guard_pos.col));
+                        drawMap((row_above, curr_guard_pos.col));
+                        curr_guard_pos.col -= 1;
+                    }
+                    else if (guard_direction == GuardDirection.RIGHT)
+                    {
+                        marked_positions.Add((row_above, curr_guard_pos.col));
+                        if (curr_guard_pos.col >= the_map[0].Count)
+                        {
+                            Console.WriteLine("error curr_guard");
+                            curr_guard_pos.col--;
+                            obs_check = true;
+                            is_done= true;
+                        }
+                        drawMap((row_above, curr_guard_pos.col));
+                        curr_guard_pos.col += 1;
+                    }
+                }
+                else
+                {
+                    // found an obstruction, check which direction to change to 
+                    Console.WriteLine("found an obstruction and guard is at " + guard_direction);
+                    if (guard_direction == GuardDirection.UP)
+                    {
+                        guard_direction = GuardDirection.RIGHT;
+                        guard_position.col += 1;
+                        curr_guard_pos.col += 1;
+                        row_above++;
+                    }
+                    else if (guard_direction == GuardDirection.RIGHT)
+                    {
+                        // if were in RIGHT state, must go DOWN next
+                        guard_direction = GuardDirection.DOWN;
+                        row_above++;
+                        curr_guard_pos.col--;
+                    }
+                    else if (guard_direction == GuardDirection.DOWN)
+                    {
+                        guard_direction = GuardDirection.LEFT;
+                        curr_guard_pos.col--;
+                        row_above--;
+                    }
+                    else {
+                        // what next,loop back?
+                        obs_check = true;
+                        is_done = true; 
+                    }
+                }
             }
         }
-
     }
 
     public void drawMap((int row, int col) curr_guard_pos)
@@ -110,13 +198,21 @@ public class AOCDay6
                 the_map[i][j] = '.';
             }
         }
-
         for (int i = 0; i < obs_positions.Count; i++)
         {
             the_map[obs_positions[i].row][obs_positions[i].col] = '#';
         }
+        for (int i = 0; i < marked_positions.Count; i++)
+        {
+            the_map[marked_positions[i].row][marked_positions[i].col] = 'X';
+        }
+
         Console.WriteLine("guard pos " + curr_guard_pos.row + ", " + curr_guard_pos.col);
-        the_map[curr_guard_pos.row][curr_guard_pos.col] = '^';
+
+        if (guard_direction == GuardDirection.UP)
+            the_map[curr_guard_pos.row][curr_guard_pos.col] = '^';
+        else if (guard_direction == GuardDirection.RIGHT)
+            the_map[curr_guard_pos.row][curr_guard_pos.col] = '>';
 
         for (int i = 0; i < the_map.Count; i++)
         {
