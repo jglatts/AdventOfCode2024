@@ -171,6 +171,12 @@ public class AOCDay6
                         is_done= true;
                         break;
                     }
+                    if (guard_direction == GuardDirection.DOWN && row_above == (the_map.Count-1))
+                    {
+                        // this is the break condition, we are in DOWN state and last row
+                        Console.WriteLine("in final step!");
+                        is_in_final_check = true;
+                    }
                     if (guard_direction == GuardDirection.UP)
                     {
                         guard_direction = GuardDirection.RIGHT;
@@ -180,7 +186,6 @@ public class AOCDay6
                     }
                     else if (guard_direction == GuardDirection.RIGHT)
                     {
-                        // if were in RIGHT state, must go DOWN next
                         guard_direction = GuardDirection.DOWN;
                         row_above++;
                         curr_guard_pos.col--;
@@ -193,10 +198,8 @@ public class AOCDay6
                     }
                     else {
                         // guard is LEFT
-                        // what next,loop back?
                         // will need to set another flag here but further processing
                         guard_direction = GuardDirection.UP;
-                        is_in_final_check = true;
                         row_above--;
                         curr_guard_pos.col++;
                     }
