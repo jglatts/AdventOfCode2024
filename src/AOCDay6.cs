@@ -18,7 +18,6 @@ public class Vertex
 
 public class AOCDay6
 {
-
     private string inputString;
     private List<List<char>> the_map;
     private readonly char obstruction;
@@ -27,6 +26,7 @@ public class AOCDay6
     private List<(int row, int col)> marked_positions;
     private Dictionary<Vertex, int> seen_amount;
     private (int row, int col) guard_position;
+    private (int row, int col) start_guard_pos;
     private GuardDirection guard_direction;
 
     public AOCDay6()
@@ -49,29 +49,23 @@ public class AOCDay6
         string[] all_lines = File.ReadAllLines(real_in);
         for (int i = 0; i < all_lines.Length; i++)
         {
-            try
+            List<char> temp_list = new List<char>();
+            string line = all_lines[i];
+            for (int j = 0; j < line.Length; j++)
             {
-                List<char> temp_list = new List<char>();
-                string line = all_lines[i];
-                for (int j = 0; j < line.Length; j++)
+                if (line[j] == guard)
                 {
-                    if (line[j] == guard)
-                    {
-                        guard_position = (i, j);
-                    }
-                    else if (line[j] == obstruction)
-                    {
-                        obs_positions.Add((i, j));
-                    }
-                    temp_list.Add(line[j]);
+                    guard_position = (i, j);
                 }
-                the_map.Add(temp_list);
+                else if (line[j] == obstruction)
+                {
+                    obs_positions.Add((i, j));
+                }
+                temp_list.Add(line[j]);
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
+            the_map.Add(temp_list);
         }
+        start_guard_pos = guard_position;
     }
 
     private void LoadInputString()
@@ -91,7 +85,6 @@ public class AOCDay6
         int row_above = curr_guard_pos.row - 1;
         if (row_above < 0)
         {
-            // will need to do more here
             Console.Write("guard is at row 0 - errr");
             return;
         }
@@ -99,9 +92,6 @@ public class AOCDay6
         //drawMap(curr_guard_pos);
         marked_positions.Add((curr_guard_pos.row, curr_guard_pos.col));
         
-        // loop detection is somewhat working
-        // the reported value (5469) is too-hi
-        // 
         while (!is_done)
         {
             while (!obs_check)
@@ -113,6 +103,7 @@ public class AOCDay6
                     is_done = true;
                     break;
                 }
+
                 if (curr_guard_pos.col >= the_map[0].Count || curr_guard_pos.col < 0)
                 {
                     Console.WriteLine("err with col_pos" + row_above);
@@ -136,9 +127,12 @@ public class AOCDay6
                         }
                         if (row_above == 0)
                         { 
+                            /*
                             curr_guard_pos.col++;
-                            //row_above++;
                             guard_direction = GuardDirection.RIGHT; 
+                            break;
+                            */
+                            is_done = true;
                             break;
                         }
                         row_above--;
@@ -176,7 +170,6 @@ public class AOCDay6
                         if (addToMap(row_above, curr_guard_pos.col))
                         {
                             // loop deteced
-                            
                             is_done = true;
                             break;
                         }
@@ -207,9 +200,6 @@ public class AOCDay6
                 }
                 else
                 {
-                    // found an obstruction, check which direction to change to 
-                    //Console.WriteLine("found an obstruction and guard is at " + guard_direction);
-                    //drawMap((row_above, curr_guard_pos.col));
                     if (is_in_final_check)
                     {
                         is_done = true;
@@ -217,7 +207,6 @@ public class AOCDay6
                     }
                     if (guard_direction == GuardDirection.DOWN && row_above == (the_map.Count))
                     {
-                        // this is the break condition, we are in DOWN state and last row
                         Console.WriteLine("in final step!");
                         is_in_final_check = true;
                     }
@@ -273,9 +262,8 @@ public class AOCDay6
         if (mapContainsVertex(v))
         {
             key = getMapKey(v);
-            if (seen_amount[key] > 2)
+            if (seen_amount[key] == 4)
             {
-                Console.WriteLine("loop detected! (" + row_above + ", " + col + ") has been seen " + seen_amount[key] + " times");
                 ret = true;
             }
             seen_amount[getMapKey(v)] += 1;
@@ -285,9 +273,6 @@ public class AOCDay6
             seen_amount.Add(v, 1);
         }
 
-        if (key != null)
-            Console.WriteLine("(" + row_above + ", " + col + ") has been seen " + seen_amount[key] + " times");
-        
         return ret;
     }
 
@@ -343,6 +328,7 @@ public class AOCDay6
         else if (guard_direction == GuardDirection.DOWN)
             the_map[curr_guard_pos.row][curr_guard_pos.col] = 'v';
 
+        the_map[start_guard_pos.row][start_guard_pos.col] = '*';
         for (int i = 0; i < the_map.Count; i++)
         {
             string s = "row (" + i + ")";
@@ -353,13 +339,6 @@ public class AOCDay6
             }
             Console.WriteLine();
         }
-
-        /*
-        foreach (var items in seen_amount)
-        { 
-            Console.WriteLine(" (" + items.Key.row + ", " + items.Key.col + ") has been seen " + items.Value + " times");
-        }
-        */
 
         Console.WriteLine();
     }

@@ -545,19 +545,9 @@ guard pos 69, 74
 (7, 110) has been seen 2 times
 (5, 105) has been seen 2 times
 (4, 105) has been seen 2 times
-(0, 110) has been seen 2 times
-(0, 111) has been seen 2 times
-(1, 111) has been seen 2 times
-(1, 110) has been seen 2 times
-(0, 110) has been seen 3 times
-(0, 111) has been seen 3 times
-(1, 111) has been seen 3 times
-(1, 110) has been seen 3 times
-loop detected! (0, 110) has been seen 3 times
-(0, 110) has been seen 4 times
-guard pos 0, 110
-row (0)   ....#.................#......................#..........................#..................#....##..#....XXXXX^X#.................
-row (1)   ...................................#...............................#......#..#...........................X...#XX..................
+guard pos 0, 105
+row (0)   ....#.................#......................#..........................#..................#....##..#....^......#.................
+row (1)   ...................................#...............................#......#..#...........................X...#....................
 row (2)   ..........................#................#......##.....#.....................................#.........X.....#..#...............
 row (3)   ..........................XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#.X........................
 row (4)   ...................#....#.X.......................#..............#.....#..............................XXXXXXXXXXXXXXXXXXXXXXXX#...
@@ -625,7 +615,7 @@ row (65)  .....#XX.XX.X.XX..X...X.X.X.X....X...X.XX....X.X.X.....#..X...X...#..X
 row (66)  ......XX.XX.X#XX..X...X.X.X.X....X...X.XX....X.X.X........X...X......X.#..X.X.X...X.X...X....X.XX...X#.X#.XX....X.X.X.X#...X...X#.
 row (67)  ......XX.XX.X.XX..X.#.X.X.X.X....X..#X.XX....X.X.X........X...X......X....X.X.X...X.X...X....X.XX...X..X..XX....X.X.X#X...#X...X.#
 row (68)  ......XX#XX.X#XX#.X...X.X.X.X....X..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#X.XX...X..X..XX.#..X.X.X.X....X#..X..
-row (69)  ....#.XX.XX.X.XX..X...X.X.X#X....X..XX.XX..#.X.X.X....#...X..#X......X.#..X.X.X#..X.X...X.#X.X.XX...X..X..XX.#..X.X.X#X....X...X..
+row (69)  ....#.XX.XX.X.XX..X...X.X.X#X....X..XX.XX..#.X.X.X....#...X..#X......X.#..*.X.X#..X.X...X.#X.X.XX...X..X..XX.#..X.X.X#X....X...X..
 row (70)  ......XX.XX.X.XX..X...X.X.X#X#...X..XX.XX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#X.X...X..X.X.XX...X..X..XX....X#X.X.X....X...X..
 row (71)  #..#..XX.XX.X.XX..X...X.X.X.X....X..XX.XX..X.X.X.X........X..#X....#.X......X.X.X.X.X...X..X#X.XX...X..X..XX....X.X.X.X....X...X..
 row (72)  .#.#..XX#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..X.X.X#X.....#..X...X...#..X......X.X.X.X#X.#.X..X.X.XX...X..X..XX....X.X.X.X....X...X..
@@ -687,8 +677,8 @@ row (127) ....................#............................................#....
 row (128) .#.....#............................#...............#.#.#..........................#.........#..............#.....................
 row (129) .............................#....................................#..#......#........................#............................
 
-guard visited 5469 distinct spots finished at (0, 110)
+guard visited 5461 distinct spots finished at (0, 105)
 
 
-solved in 411ms
+solved in 398ms
 0sec
