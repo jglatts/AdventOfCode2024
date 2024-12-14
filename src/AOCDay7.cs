@@ -28,10 +28,12 @@ public class AOCDay7
 
     private void LoadInputString()
     {
-        //string real_in = "..\\inputs\\input_day7.txt";
+        /*
+        string real_in = "..\\inputs\\input_day7.txt";
+        string[] all_lines = File.ReadAllLines(real_in);
+        */
         string test_in = "..\\inputs\\test_input7.txt";
         string[] all_lines = File.ReadAllLines(test_in);
-        //string[] all_lines = File.ReadAllLines(real_in);
         for (int i = 0; i < all_lines.Length; i++)
         {
             Operation op = new Operation();
@@ -44,6 +46,7 @@ public class AOCDay7
             }
             all_ops.Add(op);
         }
+        Console.WriteLine("input:");
         Print();
     }
 
@@ -52,44 +55,134 @@ public class AOCDay7
         for (int i = 0; i < all_ops.Count; i++)
         {
             Operation curr_op = all_ops[i];
-
-            // check if a straight '+' is valid
             int check_val = curr_op.result_value;
             int res_val = 0;
             for (int j = 0; j < curr_op.op_values.Count; j++)
             {
                 res_val += curr_op.op_values[j];
             }
-            Console.WriteLine(check_val + ": from Sum() -> " + res_val);
+            //Console.WriteLine(check_val + ": from Sum() -> " + res_val);
             if (res_val == curr_op.result_value)
             {
-                Console.WriteLine("found a valid op");
+                //Console.WriteLine("found a valid op");
                 valid_ops.Add(curr_op);
+                continue;
             }
 
-            // check for a straight '*'
             res_val = 1;
             for (int j = 0; j < curr_op.op_values.Count; j++)
-            { 
+            {
                 res_val *= curr_op.op_values[j];
             }
-            Console.WriteLine(check_val + ": from Mult() -> " + res_val);
+            //Console.WriteLine(check_val + ": from Mult() -> " + res_val);
             if (res_val == curr_op.result_value)
             {
-                Console.WriteLine("found a valid op");
+                //Console.WriteLine("found a valid op");
                 valid_ops.Add(curr_op);
+                continue;
             }
 
-            // more checks here
-            // try a (* and +) and (+ and *)
+            int num_of_operatons = curr_op.op_values.Count - 1;
+            char[] op_version_one = {'+', '*' }; 
+            char[] op_version_two = { '*', '+' };
+
+            int idx = 0;
+            string op_string = "";
+            for (int j = 0; j < curr_op.op_values.Count; j++)
+            {
+                op_string += curr_op.op_values[j];
+                if (j != (curr_op.op_values.Count-1))
+                    op_string += ", " + op_version_one[idx] + " ";
+                idx++;
+                if (idx == 2)
+                    idx = 0;
+            }
+
+            string[] new_ops = op_string.Split(',');
+            res_val = Int32.Parse(new_ops[0]);
+            for (int j = 1; j < new_ops.Length; j++)
+            {
+                if (new_ops[j].Contains("+"))
+                {
+                    string[] parse = new_ops[j].Split('+');
+                    int parsed_val = Int32.Parse(parse[1]);
+                    res_val += parsed_val;
+                    //Console.WriteLine("added " + parsed_val + " curr res_val " + res_val); ;
+                }
+                else if (new_ops[j].Contains("*"))
+                {
+                    string[] parse = new_ops[j].Split('*');
+                    int parsed_val = Int32.Parse(parse[1]);
+                    res_val *= parsed_val;
+                    //Console.WriteLine("added " + parsed_val + " curr res_val " + res_val); ;
+                }
+            }
+            //Console.WriteLine("after parsing -> val " + res_val);
+            if (res_val == curr_op.result_value)
+            {
+                valid_ops.Add(curr_op);
+                continue;
+            }
+
+            idx = 0;
+            op_string = "";
+            for (int j = 0; j < curr_op.op_values.Count; j++)
+            {
+                op_string += curr_op.op_values[j];
+                if (j != (curr_op.op_values.Count - 1))
+                    op_string += ", " + op_version_two[idx] + " ";
+                idx++;
+                if (idx == 2)
+                    idx = 0;
+            }
+
+            new_ops = op_string.Split(',');
+            res_val = Int32.Parse(new_ops[0]);
+            for (int j = 1; j < new_ops.Length; j++)
+            {
+                if (new_ops[j].Contains("+"))
+                {
+                    string[] parse = new_ops[j].Split('+');
+                    int parsed_val = Int32.Parse(parse[1]);
+                    res_val += parsed_val;
+                    //Console.WriteLine("added " + parsed_val + " curr res_val " + res_val); ;
+                }
+                else if (new_ops[j].Contains("*"))
+                {
+                    string[] parse = new_ops[j].Split('*');
+                    int parsed_val = Int32.Parse(parse[1]);
+                    res_val *= parsed_val;
+                    //Console.WriteLine("added " + parsed_val + " curr res_val " + res_val); ;
+                }
+            }
+            //Console.WriteLine("after parsing -> val " + res_val);
+            if (res_val == curr_op.result_value)
+            {
+                valid_ops.Add(curr_op);
+                continue;
+            }
         }
+
+        Console.WriteLine("\n" + valid_ops.Count + " valid operations");
+        int total = 0;
+        foreach (Operation op in valid_ops)
+        {
+            Console.Write(op.result_value + ": ");
+            foreach (int ele in op.op_values)
+            {
+                Console.Write(ele + " ");
+            }
+            total += op.result_value;
+            Console.WriteLine();
+        }
+        Console.WriteLine("\nanswer: " + total);        
     }
 
     public void Print()
     {
         for (int i = 0; i < all_ops.Count; i++)
         {
-            Console.Write("result " + all_ops[i].result_value + ": ");
+            Console.Write(all_ops[i].result_value + ": ");
             for (int j = 0; j < all_ops[i].op_values.Count; j++)
             {
                 Console.Write(all_ops[i].op_values[j] + " ");
