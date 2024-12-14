@@ -1,16 +1,20 @@
-﻿using System;
-using System.Linq;
+﻿/*
+ * compile with:
+ *   csc AOCDay7.cs /r:System.Numerics.dll
+ */
+using System;
+using System.Numerics;
 using System.IO;
 using System.Collections.Generic;
 
 public class Operation
 {
-    public int result_value;
-    public List<int> op_values;
+    public BigInteger result_value;
+    public List<BigInteger> op_values;
 
     public Operation() 
     {
-        op_values = new List<int>();
+        op_values = new List<BigInteger>();
     }
 }
 
@@ -28,21 +32,24 @@ public class AOCDay7
 
     private void LoadInputString()
     {
-        /*
+        ///*
         string real_in = "..\\inputs\\input_day7.txt";
         string[] all_lines = File.ReadAllLines(real_in);
-        */
+        //*/
+
+        /*
         string test_in = "..\\inputs\\test_input7.txt";
         string[] all_lines = File.ReadAllLines(test_in);
+        */
         for (int i = 0; i < all_lines.Length; i++)
         {
             Operation op = new Operation();
             string[] line_values = all_lines[i].Split(':');
             string[] op_vals = line_values[1].Split(' ');
-            op.result_value = Int32.Parse(line_values[0]);
+            op.result_value = BigInteger.Parse(line_values[0]);
             for (int j = 1; j < op_vals.Length; j++)
             {
-                op.op_values.Add(Int32.Parse(op_vals[j]));
+                op.op_values.Add(BigInteger.Parse(op_vals[j]));
             }
             all_ops.Add(op);
         }
@@ -55,8 +62,8 @@ public class AOCDay7
         for (int i = 0; i < all_ops.Count; i++)
         {
             Operation curr_op = all_ops[i];
-            int check_val = curr_op.result_value;
-            int res_val = 0;
+            BigInteger check_val = curr_op.result_value;
+            BigInteger res_val = 0;
             for (int j = 0; j < curr_op.op_values.Count; j++)
             {
                 res_val += curr_op.op_values[j];
@@ -164,7 +171,7 @@ public class AOCDay7
         }
 
         Console.WriteLine("\n" + valid_ops.Count + " valid operations");
-        int total = 0;
+        BigInteger total = 0;
         foreach (Operation op in valid_ops)
         {
             Console.Write(op.result_value + ": ");
