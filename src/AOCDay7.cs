@@ -22,11 +22,15 @@ public class AOCDay7
 {
     private List<Operation> all_ops;
     private List<Operation> valid_ops;
+    private List<string> perm_strings;
+    private int debug;
 
     public AOCDay7()
     {
         all_ops = new List<Operation>();
         valid_ops = new List<Operation>();
+        perm_strings = new List<string>();
+        debug = 0;
         LoadInputString();
     }
 
@@ -59,6 +63,8 @@ public class AOCDay7
 
     public void Solve()
     {
+        BigInteger total = 0;
+
         for (int i = 0; i < all_ops.Count; i++)
         {
             Operation curr_op = all_ops[i];
@@ -185,14 +191,56 @@ public class AOCDay7
                 Console.Write(curr_op.op_values[k] + " ");
             Console.WriteLine();
 
-            // need to fill a permuation table here and check if any operations are valid
-            // will most likely be a home rolled permuation generator
-            // see https://stackoverflow.com/questions/756055/listing-all-permutations-of-a-string-integer
-            char[] perm_table = new char[num_val];
+            if (num_of_operations == 1)
+            {
+                Console.WriteLine("no more valid checks");
+                continue;
+            }
+
+            // right track, but needs further refinement
+            idx = 0;
+            string permuatation_str = "";
+            for (int k = 0; k < num_of_operations; k++)
+            {
+                permuatation_str += op_version_one[idx];
+                idx++;
+                if (idx == 2)
+                    idx = 0;
+            }
+
+            //Console.WriteLine("need to permuate " + permuatation_str);
+            perm_strings = new List<string>();
+            debug = 0;
+            Permutate(permuatation_str, 0);
+
+            for (int j = 0; j < perm_strings.Count; j++)
+            {
+                string new_check_ops = perm_strings[j];
+                BigInteger bg = curr_op.op_values[0];
+                int op_idx = 1;
+                for (int k = 0; k < new_check_ops.Length; k++)
+                {
+                    if (new_check_ops[k] == '+')
+                    {
+                        bg += curr_op.op_values[op_idx++];
+                    }
+                    else if (new_check_ops[k] == '*')
+                    {
+                        bg *= curr_op.op_values[op_idx++];
+                    }
+                }
+
+                if (bg == curr_op.result_value)
+                {
+                    total += curr_op.result_value;
+                    Console.WriteLine("its a match!");
+                }
+
+                //Console.WriteLine(perm_strings[j]);
+            }
         }
 
         Console.WriteLine("\n" + valid_ops.Count + " valid operations");
-        BigInteger total = 0;
         foreach (Operation op in valid_ops)
         {
             Console.Write(op.result_value + ": ");
@@ -203,7 +251,38 @@ public class AOCDay7
             total += op.result_value;
             Console.WriteLine();
         }
-        Console.WriteLine("\nanswer: " + total);        
+        Console.WriteLine("\nanswer: " + total);  
+        
+    }
+
+    public string Swap(string s, int i, int j)
+    {
+        char[] charArray = s.ToCharArray();
+        char temp = charArray[i];
+        charArray[i] = charArray[j];
+        charArray[j] = temp;
+        return new string(charArray);
+    }
+
+    public void Permutate(string s, int idx)
+    {
+        if (idx == s.Length - 1)
+        {
+            if (!perm_strings.Contains(s))
+            {
+                //Console.WriteLine(s);
+                perm_strings.Add(s);
+            }
+            //Console.WriteLine(s);
+            return;
+        }
+
+        for (int i = idx; i < s.Length; i++)
+        {
+            s = Swap(s, idx, i);
+            Permutate(s, idx + 1);
+            s = Swap(s, idx, i);
+        }
     }
 
     public void Print()
