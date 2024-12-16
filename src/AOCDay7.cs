@@ -36,15 +36,15 @@ public class AOCDay7
 
     private void LoadInputString()
     {
-        /*
+        ///*
         string real_in = "..\\inputs\\input_day7.txt";
         string[] all_lines = File.ReadAllLines(real_in);
-        */
+        //*/
 
-        ///*
+        /*
         string test_in = "..\\inputs\\test_input7.txt";
         string[] all_lines = File.ReadAllLines(test_in);
-        //*/
+        */
         for (int i = 0; i < all_lines.Length; i++)
         {
             Operation op = new Operation();
@@ -127,7 +127,6 @@ public class AOCDay7
 
             perm_strings = new List<string>();
             debug = 0;
-            Console.WriteLine("permuatiting " + op_perm_string + " at row " + i);
             Permutate(op_perm_string, 0);
 
             string[] new_ops = op_string.Split(',');
@@ -172,36 +171,14 @@ public class AOCDay7
                     idx = 0;
             }
 
-            perm_strings = new List<string>();
             debug = 0;
-            Console.WriteLine("permuatiting " + op_perm_string + " at row " + i);
             Permutate(op_perm_string, 0);
-
-            new_ops = op_string.Split(',');
-            res_val = Int32.Parse(new_ops[0]);
-            for (int j = 1; j < new_ops.Length; j++)
+            /*
+            for (int j = 0; j < perm_strings.Count; j++)
             {
-                if (new_ops[j].Contains("+"))
-                {
-                    string[] parse = new_ops[j].Split('+');
-                    int parsed_val = Int32.Parse(parse[1]);
-                    res_val += parsed_val;
-                    //Console.WriteLine("added " + parsed_val + " curr res_val " + res_val); ;
-                }
-                else if (new_ops[j].Contains("*"))
-                {
-                    string[] parse = new_ops[j].Split('*');
-                    int parsed_val = Int32.Parse(parse[1]);
-                    res_val *= parsed_val;
-                    //Console.WriteLine("added " + parsed_val + " curr res_val " + res_val); ;
-                }
+                Console.WriteLine(perm_strings[j]);
             }
-            //Console.WriteLine("after parsing -> val " + res_val);
-            if (res_val == curr_op.result_value)
-            {
-                valid_ops.Add(curr_op);
-                continue;
-            }
+            */
 
             // didnt find any other valid ones
             // need to check more permuations here
@@ -217,22 +194,6 @@ public class AOCDay7
                 Console.WriteLine("no more valid checks");
                 continue;
             }
-
-            // right track, but needs further refinement
-            idx = 0;
-            string permuatation_str = "";
-            for (int k = 0; k < num_of_operations; k++)
-            {
-                permuatation_str += op_version_one[idx];
-                idx++;
-                if (idx == 2)
-                    idx = 0;
-            }
-
-            //Console.WriteLine("need to permuate " + permuatation_str);
-            perm_strings = new List<string>();
-            debug = 0;
-            Permutate(permuatation_str, 0);
 
             // slowing down runtime quite a bit here
             for (int j = 0; j < perm_strings.Count; j++)
@@ -299,7 +260,7 @@ public class AOCDay7
                 //Console.WriteLine(s);
                 perm_strings.Add(s);
             }
-            Console.WriteLine(s);
+            //Console.WriteLine(s);
             return;
         }
 
