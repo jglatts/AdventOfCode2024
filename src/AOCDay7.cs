@@ -36,15 +36,15 @@ public class AOCDay7
 
     private void LoadInputString()
     {
-        ///*
+        /*
         string real_in = "..\\inputs\\input_day7.txt";
         string[] all_lines = File.ReadAllLines(real_in);
-        //*/
+        */
 
-        /*
+        ///*
         string test_in = "..\\inputs\\test_input7.txt";
         string[] all_lines = File.ReadAllLines(test_in);
-        */
+        //*/
         for (int i = 0; i < all_lines.Length; i++)
         {
             Operation op = new Operation();
@@ -63,6 +63,9 @@ public class AOCDay7
 
     public void Solve()
     {
+        // with permuatations
+        //  ans: 435567148864
+        // still too low
         BigInteger total = 0;
 
         for (int i = 0; i < all_ops.Count; i++)
@@ -81,7 +84,7 @@ public class AOCDay7
             //Console.WriteLine(check_val + ": from Sum() -> " + res_val);
             if (res_val == curr_op.result_value)
             {
-                Console.WriteLine("found a valid op " + formula_str);
+                //Console.WriteLine("found a valid op " + formula_str);
                 valid_ops.Add(curr_op);
                 continue;
             }
@@ -98,7 +101,7 @@ public class AOCDay7
             //Console.WriteLine(check_val + ": from Mult() -> " + res_val);
             if (res_val == curr_op.result_value)
             {
-                Console.WriteLine("found a valid op " + formula_str);
+                //Console.WriteLine("found a valid op " + formula_str);
                 valid_ops.Add(curr_op);
                 continue;
             }
@@ -107,17 +110,26 @@ public class AOCDay7
             char[] op_version_two = { '*', '+' };
             int idx = 0;
             string op_string = "";
+            string op_perm_string = "";
 
             for (int j = 0; j < curr_op.op_values.Count; j++)
             {
                 op_string += curr_op.op_values[j];
-                if (j != (curr_op.op_values.Count-1))
+                if (j != (curr_op.op_values.Count - 1))
+                {
                     op_string += ", " + op_version_one[idx] + " ";
+                    op_perm_string += op_version_one[idx];
+                }
                 idx++;
                 if (idx == 2)
                     idx = 0;
             }
-            
+
+            perm_strings = new List<string>();
+            debug = 0;
+            Console.WriteLine("permuatiting " + op_perm_string + " at row " + i);
+            Permutate(op_perm_string, 0);
+
             string[] new_ops = op_string.Split(',');
             res_val = Int32.Parse(new_ops[0]);
             for (int j = 1; j < new_ops.Length; j++)
@@ -146,15 +158,24 @@ public class AOCDay7
 
             idx = 0;
             op_string = "";
+            op_perm_string = "";
             for (int j = 0; j < curr_op.op_values.Count; j++)
             {
                 op_string += curr_op.op_values[j];
                 if (j != (curr_op.op_values.Count - 1))
+                {
                     op_string += ", " + op_version_two[idx] + " ";
+                    op_perm_string += op_version_two[idx];
+                }
                 idx++;
                 if (idx == 2)
                     idx = 0;
             }
+
+            perm_strings = new List<string>();
+            debug = 0;
+            Console.WriteLine("permuatiting " + op_perm_string + " at row " + i);
+            Permutate(op_perm_string, 0);
 
             new_ops = op_string.Split(',');
             res_val = Int32.Parse(new_ops[0]);
@@ -213,6 +234,7 @@ public class AOCDay7
             debug = 0;
             Permutate(permuatation_str, 0);
 
+            // slowing down runtime quite a bit here
             for (int j = 0; j < perm_strings.Count; j++)
             {
                 string new_check_ops = perm_strings[j];
@@ -236,11 +258,10 @@ public class AOCDay7
 
                 if (bg == curr_op.result_value)
                 {
-                    total += curr_op.result_value;
+                    valid_ops.Add(curr_op);
                     Console.WriteLine("its a match!");
                     break;
                 }
-
                 //Console.WriteLine(perm_strings[j]);
             }
         }
@@ -278,7 +299,7 @@ public class AOCDay7
                 //Console.WriteLine(s);
                 perm_strings.Add(s);
             }
-            //Console.WriteLine(s);
+            Console.WriteLine(s);
             return;
         }
 
@@ -310,7 +331,7 @@ public class AOCDay7
         var watch = System.Diagnostics.Stopwatch.StartNew();
         a.Solve();
         watch.Stop();
-        Console.WriteLine("\n\nsolved in " + +(watch.ElapsedMilliseconds) + "ms\n" + (watch.ElapsedMilliseconds / 1000) + "sec");
+        Console.WriteLine("\n\nsolved in " + +(watch.ElapsedMilliseconds) + "ms\n" + (watch.ElapsedMilliseconds / 1000) + "sec\n" + ((watch.ElapsedMilliseconds / 1000)/60.0) + "minutes");
     }
 
 }
