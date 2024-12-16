@@ -223,10 +223,14 @@ public class AOCDay7
                     if (new_check_ops[k] == '+')
                     {
                         bg += curr_op.op_values[op_idx++];
+                        if (bg > curr_op.result_value)
+                            break;
                     }
                     else if (new_check_ops[k] == '*')
                     {
                         bg *= curr_op.op_values[op_idx++];
+                        if (bg > curr_op.result_value)
+                            break;
                     }
                 }
 
@@ -234,6 +238,7 @@ public class AOCDay7
                 {
                     total += curr_op.result_value;
                     Console.WriteLine("its a match!");
+                    break;
                 }
 
                 //Console.WriteLine(perm_strings[j]);
