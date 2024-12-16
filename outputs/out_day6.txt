@@ -136,5 +136,5 @@ row (129) .............................#....................................#..#
 guard visited 5461 distinct spots finished at (0, 105)
 
 
-solved in 391ms
+solved in 853ms
 0sec

@@ -64,37 +64,44 @@ public class AOCDay7
             Operation curr_op = all_ops[i];
             BigInteger check_val = curr_op.result_value;
             BigInteger res_val = 0;
+            string formula_str = "";
             for (int j = 0; j < curr_op.op_values.Count; j++)
             {
                 res_val += curr_op.op_values[j];
+                formula_str += curr_op.op_values[j];
+                if (j != curr_op.op_values.Count - 1)
+                    formula_str += " + ";
             }
             //Console.WriteLine(check_val + ": from Sum() -> " + res_val);
             if (res_val == curr_op.result_value)
             {
-                //Console.WriteLine("found a valid op");
+                Console.WriteLine("found a valid op " + formula_str);
                 valid_ops.Add(curr_op);
                 continue;
             }
 
             res_val = 1;
+            formula_str = "";
             for (int j = 0; j < curr_op.op_values.Count; j++)
             {
                 res_val *= curr_op.op_values[j];
+                formula_str += curr_op.op_values[j];
+                if (j != curr_op.op_values.Count - 1)
+                    formula_str += " * ";
             }
             //Console.WriteLine(check_val + ": from Mult() -> " + res_val);
             if (res_val == curr_op.result_value)
             {
-                //Console.WriteLine("found a valid op");
+                Console.WriteLine("found a valid op " + formula_str);
                 valid_ops.Add(curr_op);
                 continue;
             }
 
-            int num_of_operatons = curr_op.op_values.Count - 1;
             char[] op_version_one = {'+', '*' }; 
             char[] op_version_two = { '*', '+' };
-
             int idx = 0;
             string op_string = "";
+
             for (int j = 0; j < curr_op.op_values.Count; j++)
             {
                 op_string += curr_op.op_values[j];
@@ -104,7 +111,7 @@ public class AOCDay7
                 if (idx == 2)
                     idx = 0;
             }
-
+            
             string[] new_ops = op_string.Split(',');
             res_val = Int32.Parse(new_ops[0]);
             for (int j = 1; j < new_ops.Length; j++)
@@ -168,6 +175,20 @@ public class AOCDay7
                 valid_ops.Add(curr_op);
                 continue;
             }
+
+            // didnt find any other valid ones
+            // need to check more permuations here
+            long num_of_operations = curr_op.op_values.Count - 1;
+            long num_val = (long)Math.Pow(2, num_of_operations);
+            Console.Write("total of " + num_val + " to check for the string " +  curr_op.result_value + ": ");
+            for (int k = 0; k < curr_op.op_values.Count; k++)
+                Console.Write(curr_op.op_values[k] + " ");
+            Console.WriteLine();
+
+            // need to fill a permuation table here and check if any operations are valid
+            // will most likely be a home rolled permuation generator
+            // see https://stackoverflow.com/questions/756055/listing-all-permutations-of-a-string-integer
+            char[] perm_table = new char[num_val];
         }
 
         Console.WriteLine("\n" + valid_ops.Count + " valid operations");
